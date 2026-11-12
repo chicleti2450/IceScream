@@ -559,7 +559,7 @@ export default function App() {
     Alert.alert(
       'Cadastro realizado!',
       'Sua conta de demonstração foi criada. Agora você pode entrar.',
-      [{ text: 'Ir para o login', onPress: () => {} }]
+      [{ text: 'Ir para o login', onPress: () => { } }]
     );
   }
 
@@ -593,29 +593,38 @@ export default function App() {
             )}
           </Stack.Screen>
 
+
           <Stack.Screen name="Cadastro">
             {(props) => (
               <CadastroScreen
                 {...props}
                 onRegister={(dados) => {
-                  if (account && account.email === dados.email) {
-                    Alert.alert('Atenção', 'Este e-mail já foi cadastrado.');
+                  if (
+                    account &&
+                    account.email.toLowerCase() === dados.email.toLowerCase()
+                  ) {
+                    Alert.alert(
+                      'Atenção',
+                      'Este e-mail já foi cadastrado.'
+                    );
                     return;
                   }
 
+                  // Salva os dados da conta
                   setAccount(dados);
 
+                  // Retorna imediatamente para a tela de login
+                  props.navigation.goBack();
+
+                  // Exibe a confirmação
                   Alert.alert(
                     'Cadastro realizado!',
-                    'Sua conta foi criada nesta sessão. Faça login para continuar.',
-                    [{
-                      text: 'Ir para o login',
-                      onPress: () => props.navigation.goBack(),
-                    }]
+                    'Sua conta foi criada. Agora você pode entrar.'
                   );
                 }}
               />
             )}
+
           </Stack.Screen>
 
           <Stack.Screen name="Principal">
