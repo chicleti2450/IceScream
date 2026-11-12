@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import {
   Alert,
+  FlatList,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -32,6 +34,87 @@ const CORES = {
   campo: '#171717',
 };
 
+// PRODUTOS DEMONSTRATIVOS
+
+const PRODUTOS = [
+  {
+    id: '1',
+    nome: 'Vampire Kiss',
+    personagem: 'Vampiros',
+    categoria: 'Desaparecidos',
+    sabor: 'Frutas vermelhas',
+    descricao: 'Sorvete de frutas vermelhas com sabor intenso.',
+    preco: 18.90,
+    emoji: '🍓',
+    disponivel: true,
+  },
+  {
+    id: '2',
+    nome: 'Frankenstein Mint',
+    personagem: 'Frankenstein',
+    categoria: 'Clássicos',
+    sabor: 'Menta com chocolate',
+    descricao: 'Sorvete refrescante de menta com chocolate.',
+    preco: 21.90,
+    emoji: '🍃',
+    disponivel: true,
+  },
+  {
+    id: '3',
+    nome: 'Nightmare Cookie',
+    personagem: 'Pesadelos',
+    categoria: 'Especiais',
+    sabor: 'Baunilha com biscoitos',
+    descricao: 'Baunilha cremosa com pedaços de biscoito.',
+    preco: 19.90,
+    emoji: '🍪',
+    disponivel: true,
+  },
+  {
+    id: '4',
+    nome: 'Black Lagoon',
+    personagem: 'Criaturas das profundezas',
+    categoria: 'Especiais',
+    sabor: 'Chocolate intenso',
+    descricao: 'Sorvete de chocolate intenso e cremoso.',
+    preco: 22.90,
+    emoji: '🍫',
+    disponivel: true,
+  },
+  {
+    id: '5',
+    nome: 'Pumpkin Terror',
+    personagem: 'Halloween',
+    categoria: 'Promoções',
+    sabor: 'Abóbora com especiarias',
+    descricao: 'Abóbora com canela e especiarias.',
+    preco: 16.90,
+    emoji: '🎃',
+    disponivel: false,
+  },
+  {
+    id: '6',
+    nome: 'Ghost Vanilla',
+    personagem: 'Fantasmas',
+    categoria: 'Clássicos',
+    sabor: 'Baunilha',
+    descricao: 'Sorvete tradicional de baunilha.',
+    preco: 16.90,
+    emoji: '👻',
+    disponivel: true,
+  },
+];
+
+const CATEGORIAS = [
+  'Todos',
+  'Desaparecidos',
+  'Clássicos',
+  'Especiais',
+  'Promoções',
+];
+
+// LOGOTIPO
+
 function Logo() {
   return (
     <View style={estilos.logoContainer}>
@@ -44,6 +127,8 @@ function Logo() {
   );
 }
 
+// CAMPO DE TEXTO
+
 function Campo({
   titulo,
   valor,
@@ -55,6 +140,7 @@ function Campo({
   return (
     <View style={estilos.grupoCampo}>
       <Text style={estilos.rotulo}>{titulo}</Text>
+
       <TextInput
         style={estilos.input}
         value={valor}
@@ -63,13 +149,17 @@ function Campo({
         placeholderTextColor="#777777"
         secureTextEntry={senha}
         keyboardType={teclado}
-        autoCapitalize={teclado === 'email-address' ? 'none' : 'sentences'}
+        autoCapitalize={
+          teclado === 'email-address' ? 'none' : 'sentences'
+        }
         autoCorrect={false}
         selectionColor={CORES.vermelho}
       />
     </View>
   );
 }
+
+// BOTÃO
 
 function Botao({ titulo, aoPressionar, secundario = false }) {
   return (
@@ -92,6 +182,8 @@ function Botao({ titulo, aoPressionar, secundario = false }) {
     </TouchableOpacity>
   );
 }
+
+// LOGIN
 
 function LoginScreen({ navigation, account, onLogin }) {
   const [email, setEmail] = useState('');
@@ -129,9 +221,8 @@ function LoginScreen({ navigation, account, onLogin }) {
       >
         <Logo />
 
-        <Text style={estilos.titulo}>
-          ENTRE SE PUDER
-        </Text>
+        <Text style={estilos.titulo}>ENTRE SE PUDER</Text>
+
         <Text style={estilos.descricao}>
           Seu próximo pesadelo tem sabor.
         </Text>
@@ -170,6 +261,8 @@ function LoginScreen({ navigation, account, onLogin }) {
   );
 }
 
+// CADASTRO
+
 function CadastroScreen({ navigation, onRegister }) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -179,14 +272,14 @@ function CadastroScreen({ navigation, onRegister }) {
 
   function cadastrar() {
     if (!nome.trim() || !email.trim() || !senha || !confirmacao) {
-      Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
+      Alert.alert('Atenção', 'Preencha os campos obrigatórios.');
       return;
     }
 
     const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formatoEmail.test(email.trim())) {
-      Alert.alert('E-mail inválido', 'Digite um endereço de e-mail válido.');
+      Alert.alert('E-mail inválido', 'Digite um e-mail válido.');
       return;
     }
 
@@ -221,62 +314,34 @@ function CadastroScreen({ navigation, onRegister }) {
           onPress={() => navigation.goBack()}
           style={estilos.voltar}
         >
-          <Text style={estilos.textoVoltar}>‹  VOLTAR</Text>
+          <Text style={estilos.textoVoltar}>‹ VOLTAR</Text>
         </TouchableOpacity>
 
         <Text style={estilos.tituloCadastro}>CADASTRO</Text>
+
         <Text style={estilos.descricao}>
           Faça parte desta experiência sombria.
         </Text>
 
-        <Campo
-          titulo="Nome completo *"
-          valor={nome}
-          alterar={setNome}
-          placeholder="Seu nome"
-        />
+        <Campo titulo="Nome completo *" valor={nome} alterar={setNome} placeholder="Seu nome" />
 
-        <Campo
-          titulo="E-mail *"
-          valor={email}
-          alterar={setEmail}
-          placeholder="seuemail@exemplo.com"
-          teclado="email-address"
-        />
+        <Campo titulo="E-mail *" valor={email} alterar={setEmail} placeholder="seuemail@exemplo.com" teclado="email-address" />
 
-        <Campo
-          titulo="Senha *"
-          valor={senha}
-          alterar={setSenha}
-          placeholder="Mínimo de 6 caracteres"
-          senha
-        />
+        <Campo titulo="Senha *" valor={senha} alterar={setSenha} placeholder="Mínimo de 6 caracteres" senha />
 
-        <Campo
-          titulo="Confirmar senha *"
-          valor={confirmacao}
-          alterar={setConfirmacao}
-          placeholder="Digite a senha novamente"
-          senha
-        />
+        <Campo titulo="Confirmar senha *" valor={confirmacao} alterar={setConfirmacao} placeholder="Digite novamente" senha />
 
-        <Campo
-          titulo="Telefone"
-          valor={telefone}
-          alterar={setTelefone}
-          placeholder="(00) 00000-0000"
-          teclado="phone-pad"
-        />
+        <Campo titulo="Telefone" valor={telefone} alterar={setTelefone} placeholder="(00) 00000-0000" teclado="phone-pad" />
 
         <Botao titulo="CADASTRAR" aoPressionar={cadastrar} />
 
-        <Text style={estilos.aviso}>
-          * Campos obrigatórios.
-        </Text>
+        <Text style={estilos.aviso}>* Campos obrigatórios.</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+
+// CABEÇALHO DAS TELAS INTERNAS
 
 function Cabecalho({ titulo, navigation }) {
   function abrirMenu() {
@@ -294,7 +359,6 @@ function Cabecalho({ titulo, navigation }) {
       <TouchableOpacity
         onPress={abrirMenu}
         style={estilos.botaoMenu}
-        accessibilityLabel="Abrir menu"
       >
         <Text style={estilos.iconeMenu}>☰</Text>
       </TouchableOpacity>
@@ -312,6 +376,7 @@ function Pagina({ navigation, titulo, descricao, children }) {
   return (
     <View style={estilos.tela}>
       <Cabecalho titulo={titulo} navigation={navigation} />
+
       <ScrollView contentContainerStyle={estilos.conteudoPagina}>
         <Text style={estilos.tituloPagina}>{titulo}</Text>
         <Text style={estilos.descricaoPagina}>{descricao}</Text>
@@ -321,26 +386,313 @@ function Pagina({ navigation, titulo, descricao, children }) {
   );
 }
 
+// TELA INICIAL
+
 function InicioScreen({ navigation }) {
+  const [pesquisa, setPesquisa] = useState('');
+  const [categoriaAtiva, setCategoriaAtiva] = useState('Todos');
+
+  const produtosFiltrados = PRODUTOS.filter((produto) => {
+    const correspondeNome = produto.nome
+      .toLowerCase()
+      .includes(pesquisa.toLowerCase().trim());
+
+    const correspondeCategoria =
+      categoriaAtiva === 'Todos' ||
+      produto.categoria === categoriaAtiva;
+
+    return correspondeNome && correspondeCategoria;
+  });
+
+  function abrirPerfil() {
+    navigation.getParent()?.navigate('Meu perfil');
+  }
+
+  function abrirMenu() {
+    navigation.getParent()?.openDrawer();
+  }
+
+  function abrirProduto(produto) {
+    Alert.alert(
+      produto.nome,
+      `${produto.descricao}\n\nSabor: ${produto.sabor}\nPreço: R$ ${produto.preco.toFixed(2).replace('.', ',')}\n\n${produto.disponivel ? 'Disponível para compra.' : 'Produto indisponível no momento.'}`
+    );
+  }
+
+  function montarSorvete() {
+    navigation.getParent()?.navigate('Montar meu sorvete');
+  }
+
+  function renderProduto({ item }) {
+    return (
+      <TouchableOpacity
+        style={estilos.cartaoProduto}
+        onPress={() => abrirProduto(item)}
+        activeOpacity={0.85}
+      >
+        <View style={estilos.imagemProduto}>
+          <Text style={estilos.emojiProduto}>{item.emoji}</Text>
+        </View>
+
+        <Text style={estilos.nomeProduto}>{item.nome}</Text>
+
+        <Text style={estilos.personagemProduto}>
+          {item.personagem}
+        </Text>
+
+        <Text style={estilos.saborProduto}>
+          {item.sabor}
+        </Text>
+
+        <Text style={estilos.precoProduto}>
+          R$ {item.preco.toFixed(2).replace('.', ',')}
+        </Text>
+
+        {!item.disponivel && (
+          <Text style={estilos.indisponivel}>
+            ESGOTADO
+          </Text>
+        )}
+
+        {item.disponivel && (
+          <Text style={estilos.verDetalhes}>
+            VER DETALHES →
+          </Text>
+        )}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={estilos.tela}>
+      <FlatList
+        data={produtosFiltrados}
+        keyExtractor={(item) => item.id}
+        renderItem={renderProduto}
+        numColumns={2}
+        columnWrapperStyle={estilos.linhaProdutos}
+        contentContainerStyle={estilos.listaProdutos}
+        keyboardShouldPersistTaps="handled"
+        ListHeaderComponent={
+          <View>
+            {/* TOPO */}
+
+            <View style={estilos.topoInicio}>
+              <TouchableOpacity
+                style={estilos.botaoMenu}
+                onPress={abrirMenu}
+              >
+                <Text style={estilos.iconeMenu}>☰</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={estilos.botaoPerfil}
+                onPress={abrirPerfil}
+                accessibilityLabel="Abrir perfil"
+              >
+                <Text style={estilos.iconePerfil}>●</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* LOGO CENTRALIZADA */}
+
+            <View style={estilos.logoImagemContainer}>
+              <Image
+                source={require('./assets/logo.png')}
+                style={estilos.logoImagem}
+                resizeMode="contain"
+              />
+            </View>
+
+            {/* PESQUISA */}
+
+            <View style={estilos.pesquisaContainer}>
+              <Text style={estilos.iconePesquisa}>⌕</Text>
+
+              <TextInput
+                style={estilos.inputPesquisa}
+                placeholder="Pesquisar pelo nome do sorvete..."
+                placeholderTextColor="#888888"
+                value={pesquisa}
+                onChangeText={setPesquisa}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+
+              {pesquisa.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setPesquisa('')}
+                >
+                  <Text style={estilos.limparPesquisa}>✕</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* CATEGORIAS */}
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={estilos.listaCategorias}
+            >
+              {CATEGORIAS.map((categoria) => {
+                const ativa = categoriaAtiva === categoria;
+
+                return (
+                  <TouchableOpacity
+                    key={categoria}
+                    onPress={() => setCategoriaAtiva(categoria)}
+                    style={[
+                      estilos.categoria,
+                      ativa && estilos.categoriaAtiva,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        estilos.textoCategoria,
+                        ativa && estilos.textoCategoriaAtiva,
+                      ]}
+                    >
+                      {categoria}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* BOTÃO MONTAR SORVETE */}
+
+            <TouchableOpacity
+              style={estilos.botaoMontar}
+              onPress={montarSorvete}
+              activeOpacity={0.85}
+            >
+              <Text style={estilos.iconeMontar}>🍦</Text>
+
+              <View style={estilos.textosMontar}>
+                <Text style={estilos.textoMontar}>
+                  MONTE SEU SORVETE
+                </Text>
+
+                <Text style={estilos.subtextoMontar}>
+                  Crie uma combinação do seu jeito.
+                </Text>
+              </View>
+
+              <Text style={estilos.setaMontar}>›</Text>
+            </TouchableOpacity>
+
+            {/* TÍTULO DO CATÁLOGO */}
+
+            <View style={estilos.tituloCatalogoContainer}>
+              <Text style={estilos.tituloCatalogo}>
+                {pesquisa ? 'RESULTADOS' : 'NOSSOS SORVETES'}
+              </Text>
+
+              <Text style={estilos.quantidadeProdutos}>
+                {produtosFiltrados.length} produtos
+              </Text>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={estilos.semResultados}>
+            <Text style={estilos.emojiVazio}>🍦</Text>
+
+            <Text style={estilos.textoSemResultados}>
+              Nenhum sorvete encontrado.
+            </Text>
+
+            <Text style={estilos.descricaoSemResultados}>
+              Tente pesquisar outro nome ou selecionar outra categoria.
+            </Text>
+          </View>
+        }
+      />
+    </View>
+  );
+}
+
+// MONTAR MEU SORVETE
+
+function MontarSorveteScreen({ navigation }) {
+  const [base, setBase] = useState('');
+  const [cobertura, setCobertura] = useState('');
+  const [adicional, setAdicional] = useState('');
+
+  function opcao(titulo, valor, alterar) {
+    const selecionado = valor === titulo;
+
+    return (
+      <TouchableOpacity
+        key={titulo}
+        style={[
+          estilos.opcaoMontagem,
+          selecionado && estilos.opcaoSelecionada,
+        ]}
+        onPress={() => alterar(titulo)}
+      >
+        <Text
+          style={[
+            estilos.textoOpcao,
+            selecionado && estilos.textoOpcaoSelecionada,
+          ]}
+        >
+          {selecionado ? '✓ ' : ''}
+          {titulo}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  function confirmarMontagem() {
+    if (!base || !cobertura) {
+      Alert.alert(
+        'Falta escolher',
+        'Escolha pelo menos uma base e uma cobertura.'
+      );
+      return;
+    }
+
+    Alert.alert(
+      'Sua criação está pronta!',
+      `Base: ${base}\nCobertura: ${cobertura}\nAdicional: ${adicional || 'Nenhum'}\n\nA integração com o carrinho será feita na próxima etapa.`
+    );
+  }
+
   return (
     <Pagina
       navigation={navigation}
-      titulo="Início"
-      descricao="Prepare-se para experimentar sabores de outro mundo."
+      titulo="Monte seu sorvete"
+      descricao="Crie sua própria combinação."
     >
-      <View style={estilos.banner}>
-        <Text style={estilos.bannerPequeno}>BEM-VINDO À</Text>
-        <Text style={estilos.bannerTitulo}>ICE SCREAM</Text>
-        <Text style={estilos.bannerTexto}>
-          Sorvetes inspirados no universo do terror.
-        </Text>
-        <Text style={estilos.aviso}>
-          Nosso catálogo será adicionado na próxima etapa.
-        </Text>
-      </View>
+      <Text style={estilos.tituloOpcao}>1. Escolha sua base</Text>
+
+      {['Baunilha', 'Chocolate', 'Morango', 'Menta'].map((item) =>
+        opcao(item, base, setBase)
+      )}
+
+      <Text style={estilos.tituloOpcao}>2. Escolha sua cobertura</Text>
+
+      {['Chocolate', 'Morango', 'Caramelo', 'Frutas vermelhas'].map((item) =>
+        opcao(item, cobertura, setCobertura)
+      )}
+
+      <Text style={estilos.tituloOpcao}>3. Escolha um adicional</Text>
+
+      {['Biscoito', 'Granulado', 'Castanhas', 'Sem adicional'].map((item) =>
+        opcao(item, adicional, setAdicional)
+      )}
+
+      <Botao
+        titulo="CONFIRMAR MINHA CRIAÇÃO"
+        aoPressionar={confirmarMontagem}
+      />
     </Pagina>
   );
 }
+
+// CARRINHO
 
 function CarrinhoScreen({ navigation }) {
   return (
@@ -350,12 +702,15 @@ function CarrinhoScreen({ navigation }) {
       descricao="Seus sabores selecionados aparecerão aqui."
     >
       <Text style={estilos.textoVazio}>🍦</Text>
+
       <Text style={estilos.textoCentralizado}>
         Seu carrinho ainda está vazio.
       </Text>
     </Pagina>
   );
 }
+
+// AJUDA
 
 function AjudaScreen({ navigation }) {
   return (
@@ -366,28 +721,31 @@ function AjudaScreen({ navigation }) {
     >
       <View style={estilos.cartao}>
         <Text style={estilos.rotulo}>Como faço um pedido?</Text>
+
         <Text style={estilos.descricao}>
-          Em breve você poderá escolher seus sorvetes, adicionar ao carrinho
-          e finalizar a compra pelo aplicativo.
+          Escolha seus sorvetes, adicione ao carrinho e finalize sua compra.
         </Text>
       </View>
 
       <View style={estilos.cartao}>
         <Text style={estilos.rotulo}>Preciso de atendimento</Text>
+
         <Text style={estilos.descricao}>
-          O canal de atendimento será configurado nas próximas etapas.
+          Nosso canal de atendimento será configurado nas próximas etapas.
         </Text>
       </View>
     </Pagina>
   );
 }
 
+// PERFIL
+
 function PerfilScreen({ navigation, user, onLogout }) {
   return (
     <Pagina
       navigation={navigation}
       titulo="Meu perfil"
-      descricao="Seus dados de demonstração."
+      descricao="Seus dados de usuário."
     >
       <View style={estilos.cartao}>
         <Text style={estilos.rotulo}>Nome</Text>
@@ -416,12 +774,14 @@ function PerfilScreen({ navigation, user, onLogout }) {
   );
 }
 
+// PEDIDOS
+
 function PedidosScreen({ navigation }) {
   return (
     <Pagina
       navigation={navigation}
       titulo="Meus pedidos"
-      descricao="Aqui ficará o histórico de compras confirmadas."
+      descricao="Histórico das suas compras."
     >
       <Text style={estilos.textoCentralizado}>
         Você ainda não tem pedidos registrados.
@@ -430,12 +790,14 @@ function PedidosScreen({ navigation }) {
   );
 }
 
+// ENDEREÇOS
+
 function EnderecosScreen({ navigation }) {
   return (
     <Pagina
       navigation={navigation}
       titulo="Endereços"
-      descricao="Seus endereços de entrega serão exibidos aqui."
+      descricao="Seus endereços de entrega."
     >
       <Text style={estilos.textoCentralizado}>
         Nenhum endereço cadastrado.
@@ -444,12 +806,14 @@ function EnderecosScreen({ navigation }) {
   );
 }
 
+// ACOMPANHAMENTO
+
 function AcompanharScreen({ navigation }) {
   return (
     <Pagina
       navigation={navigation}
       titulo="Acompanhar pedido"
-      descricao="Consulte o andamento de suas compras."
+      descricao="Consulte suas compras."
     >
       <Text style={estilos.textoCentralizado}>
         Nenhum pedido disponível para acompanhamento.
@@ -457,6 +821,8 @@ function AcompanharScreen({ navigation }) {
     </Pagina>
   );
 }
+
+// NAVEGAÇÃO INFERIOR
 
 function LojaTabs() {
   return (
@@ -472,27 +838,49 @@ function LojaTabs() {
           paddingBottom: 7,
           paddingTop: 6,
         },
-        sceneStyle: { backgroundColor: CORES.fundo },
+        sceneStyle: {
+          backgroundColor: CORES.fundo,
+        },
       }}
     >
       <Tab.Screen
         name="Inicio"
         component={InicioScreen}
-        options={{ title: 'Início', tabBarLabel: 'Início', tabBarIcon: () => <Text style={estilos.iconeTab}>⌂</Text> }}
+        options={{
+          title: 'Início',
+          tabBarLabel: 'Início',
+          tabBarIcon: () => (
+            <Text style={estilos.iconeTab}>⌂</Text>
+          ),
+        }}
       />
+
       <Tab.Screen
         name="Carrinho"
         component={CarrinhoScreen}
-        options={{ tabBarLabel: 'Carrinho', tabBarIcon: () => <Text style={estilos.iconeTab}>🛒</Text> }}
+        options={{
+          tabBarLabel: 'Carrinho',
+          tabBarIcon: () => (
+            <Text style={estilos.iconeTab}>🛒</Text>
+          ),
+        }}
       />
+
       <Tab.Screen
         name="Ajuda"
         component={AjudaScreen}
-        options={{ tabBarLabel: 'Ajuda', tabBarIcon: () => <Text style={estilos.iconeTab}>?</Text> }}
+        options={{
+          tabBarLabel: 'Ajuda',
+          tabBarIcon: () => (
+            <Text style={estilos.iconeTab}>?</Text>
+          ),
+        }}
       />
     </Tab.Navigator>
   );
 }
+
+// MENU LATERAL
 
 function PrincipalDrawer({ user, onLogout }) {
   return (
@@ -500,83 +888,101 @@ function PrincipalDrawer({ user, onLogout }) {
       initialRouteName="Loja"
       screenOptions={{
         headerShown: false,
-        drawerStyle: { backgroundColor: CORES.fundo, width: 285 },
+        drawerStyle: {
+          backgroundColor: CORES.fundo,
+          width: 285,
+        },
         drawerActiveTintColor: CORES.branco,
         drawerInactiveTintColor: CORES.cinza,
         drawerActiveBackgroundColor: CORES.vinho,
-        drawerLabelStyle: { fontSize: 15 },
-        sceneStyle: { backgroundColor: CORES.fundo },
+        drawerLabelStyle: {
+          fontSize: 15,
+        },
+        sceneStyle: {
+          backgroundColor: CORES.fundo,
+        },
       }}
     >
       <Drawer.Screen
         name="Loja"
         component={LojaTabs}
-        options={{ title: 'Início', drawerLabel: 'Início' }}
+        options={{
+          title: 'Início',
+          drawerLabel: 'Início',
+        }}
+      />
+
+      <Drawer.Screen
+        name="Montar meu sorvete"
+        component={MontarSorveteScreen}
+        options={{
+          drawerLabel: 'Montar meu sorvete',
+        }}
       />
 
       <Drawer.Screen
         name="Meu perfil"
-        options={{ title: 'Meu perfil', drawerLabel: 'Meu perfil' }}
+        options={{
+          drawerLabel: 'Meu perfil',
+        }}
       >
         {(props) => (
-          <PerfilScreen {...props} user={user} onLogout={onLogout} />
+          <PerfilScreen
+            {...props}
+            user={user}
+            onLogout={onLogout}
+          />
         )}
       </Drawer.Screen>
 
       <Drawer.Screen
         name="Meus pedidos"
         component={PedidosScreen}
-        options={{ drawerLabel: 'Meus pedidos' }}
+        options={{
+          drawerLabel: 'Meus pedidos',
+        }}
       />
 
       <Drawer.Screen
         name="Acompanhar pedido"
         component={AcompanharScreen}
-        options={{ drawerLabel: 'Acompanhar pedido' }}
+        options={{
+          drawerLabel: 'Acompanhar pedido',
+        }}
       />
 
       <Drawer.Screen
         name="Endereços"
         component={EnderecosScreen}
-        options={{ drawerLabel: 'Endereços' }}
+        options={{
+          drawerLabel: 'Endereços',
+        }}
       />
     </Drawer.Navigator>
   );
 }
 
+// APLICATIVO
+
 export default function App() {
   const [account, setAccount] = useState(null);
   const [user, setUser] = useState(null);
 
-  function registrar(dados) {
-    if (account && account.email === dados.email) {
-      Alert.alert('Atenção', 'Este e-mail já foi cadastrado.');
-      return;
-    }
-
-    setAccount(dados);
-
-    Alert.alert(
-      'Cadastro realizado!',
-      'Sua conta de demonstração foi criada. Agora você pode entrar.',
-      [{ text: 'Ir para o login', onPress: () => { } }]
-    );
-  }
-
-  function sair(navigation) {
-    setUser(null);
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar barStyle="light-content" backgroundColor={CORES.fundo} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={CORES.fundo}
+      />
 
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Login"
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: CORES.fundo },
+            contentStyle: {
+              backgroundColor: CORES.fundo,
+            },
             animation: 'slide_from_right',
           }}
         >
@@ -592,7 +998,6 @@ export default function App() {
               />
             )}
           </Stack.Screen>
-
 
           <Stack.Screen name="Cadastro">
             {(props) => (
@@ -610,13 +1015,9 @@ export default function App() {
                     return;
                   }
 
-                  // Salva os dados da conta
                   setAccount(dados);
-
-                  // Retorna imediatamente para a tela de login
                   props.navigation.goBack();
 
-                  // Exibe a confirmação
                   Alert.alert(
                     'Cadastro realizado!',
                     'Sua conta foi criada. Agora você pode entrar.'
@@ -624,7 +1025,6 @@ export default function App() {
                 }}
               />
             )}
-
           </Stack.Screen>
 
           <Stack.Screen name="Principal">
@@ -645,26 +1045,32 @@ export default function App() {
   );
 }
 
+// ESTILOS
+
 const estilos = StyleSheet.create({
   tela: {
     flex: 1,
     backgroundColor: CORES.fundo,
   },
+
   conteudoLogin: {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 28,
     paddingVertical: 35,
   },
+
   conteudoCadastro: {
     paddingHorizontal: 25,
     paddingTop: 22,
     paddingBottom: 40,
   },
+
   logoContainer: {
     alignItems: 'center',
     marginBottom: 38,
   },
+
   logoIce: {
     color: CORES.branco,
     fontSize: 53,
@@ -673,6 +1079,7 @@ const estilos = StyleSheet.create({
     textShadowColor: '#777777',
     textShadowRadius: 12,
   },
+
   logoScream: {
     color: CORES.vermelho,
     fontSize: 39,
@@ -681,12 +1088,14 @@ const estilos = StyleSheet.create({
     textShadowColor: CORES.vermelho,
     textShadowRadius: 16,
   },
+
   subtituloLogo: {
     color: CORES.cinza,
     fontSize: 11,
     letterSpacing: 1.5,
     marginTop: 12,
   },
+
   titulo: {
     color: CORES.branco,
     fontSize: 23,
@@ -694,6 +1103,7 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 2,
   },
+
   tituloCadastro: {
     color: CORES.vermelho,
     fontSize: 30,
@@ -704,6 +1114,7 @@ const estilos = StyleSheet.create({
     textShadowColor: CORES.vermelho,
     textShadowRadius: 12,
   },
+
   descricao: {
     color: CORES.cinza,
     fontSize: 14,
@@ -711,18 +1122,22 @@ const estilos = StyleSheet.create({
     marginTop: 7,
     marginBottom: 20,
   },
+
   formulario: {
     marginTop: 25,
   },
+
   grupoCampo: {
     marginBottom: 18,
   },
+
   rotulo: {
     color: CORES.branco,
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 9,
   },
+
   input: {
     backgroundColor: CORES.campo,
     color: CORES.branco,
@@ -733,6 +1148,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 15,
     fontSize: 15,
   },
+
   botao: {
     backgroundColor: CORES.vermelho,
     minHeight: 52,
@@ -742,20 +1158,24 @@ const estilos = StyleSheet.create({
     marginTop: 12,
     paddingHorizontal: 15,
   },
+
   textoBotao: {
     color: CORES.branco,
     fontWeight: '900',
     fontSize: 15,
     letterSpacing: 1,
   },
+
   botaoSecundario: {
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: CORES.vermelho,
   },
+
   textoBotaoSecundario: {
     color: CORES.branco,
   },
+
   rodape: {
     color: '#777777',
     textAlign: 'center',
@@ -763,20 +1183,24 @@ const estilos = StyleSheet.create({
     letterSpacing: 1.4,
     marginTop: 35,
   },
+
   voltar: {
     alignSelf: 'flex-start',
     paddingVertical: 10,
     paddingRight: 20,
   },
+
   textoVoltar: {
     color: CORES.branco,
     fontSize: 15,
   },
+
   aviso: {
     color: CORES.cinza,
     fontSize: 12,
     marginTop: 16,
   },
+
   cabecalho: {
     minHeight: 65,
     paddingHorizontal: 15,
@@ -785,66 +1209,48 @@ const estilos = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: CORES.vinho,
   },
+
   botaoMenu: {
     padding: 9,
-    marginRight: 8,
   },
+
   iconeMenu: {
     color: CORES.branco,
     fontSize: 23,
   },
+
   logoPequeno: {
     color: CORES.branco,
     fontWeight: '900',
     fontSize: 14,
     letterSpacing: 1,
   },
+
   tituloCabecalho: {
     color: CORES.cinza,
     fontSize: 12,
     marginLeft: 'auto',
   },
+
   conteudoPagina: {
     padding: 22,
     paddingBottom: 40,
   },
+
   tituloPagina: {
     color: CORES.vermelho,
     fontSize: 27,
     fontWeight: '900',
     marginBottom: 5,
   },
+
   descricaoPagina: {
     color: CORES.cinza,
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 25,
   },
-  banner: {
-    backgroundColor: '#18090C',
-    borderWidth: 1,
-    borderColor: CORES.vinho,
-    borderRadius: 14,
-    padding: 22,
-    minHeight: 210,
-    justifyContent: 'center',
-  },
-  bannerPequeno: {
-    color: CORES.cinza,
-    fontSize: 11,
-    letterSpacing: 3,
-  },
-  bannerTitulo: {
-    color: CORES.vermelho,
-    fontSize: 32,
-    fontWeight: '900',
-    marginVertical: 8,
-  },
-  bannerTexto: {
-    color: CORES.branco,
-    fontSize: 15,
-    lineHeight: 22,
-  },
+
   cartao: {
     backgroundColor: CORES.campo,
     borderWidth: 1,
@@ -853,11 +1259,13 @@ const estilos = StyleSheet.create({
     padding: 17,
     marginBottom: 15,
   },
+
   textoVazio: {
     fontSize: 55,
     textAlign: 'center',
     marginTop: 35,
   },
+
   textoCentralizado: {
     color: CORES.cinza,
     fontSize: 15,
@@ -865,9 +1273,305 @@ const estilos = StyleSheet.create({
     lineHeight: 23,
     marginTop: 18,
   },
+
   iconeTab: {
     color: CORES.branco,
     fontSize: 20,
   },
-});
 
+  // TELA INICIAL
+
+  topoInicio: {
+    height: 58,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  botaoPerfil: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: CORES.vinho,
+    borderWidth: 1,
+    borderColor: CORES.vermelho,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  iconePerfil: {
+    color: CORES.branco,
+    fontSize: 20,
+  },
+
+  logoImagemContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 25,
+    paddingTop: 8,
+    paddingBottom: 18,
+  },
+
+  logoImagem: {
+    width: '100%',
+    maxWidth: 350,
+    height: 155,
+  },
+
+  pesquisaContainer: {
+    marginHorizontal: 20,
+    height: 50,
+    backgroundColor: CORES.campo,
+    borderWidth: 1,
+    borderColor: CORES.vinho,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+  },
+
+  iconePesquisa: {
+    color: CORES.cinza,
+    fontSize: 27,
+    marginRight: 10,
+  },
+
+  inputPesquisa: {
+    flex: 1,
+    color: CORES.branco,
+    fontSize: 14,
+    height: '100%',
+  },
+
+  limparPesquisa: {
+    color: CORES.cinza,
+    fontSize: 18,
+    paddingHorizontal: 5,
+  },
+
+  listaCategorias: {
+    paddingHorizontal: 15,
+    paddingTop: 23,
+    paddingBottom: 20,
+    gap: 9,
+  },
+
+  categoria: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#393939',
+    backgroundColor: CORES.campo,
+  },
+
+  categoriaAtiva: {
+    backgroundColor: CORES.vermelho,
+    borderColor: CORES.vermelho,
+  },
+
+  textoCategoria: {
+    color: CORES.cinza,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+
+  textoCategoriaAtiva: {
+    color: CORES.branco,
+    fontWeight: '900',
+  },
+
+  botaoMontar: {
+    backgroundColor: CORES.vermelho,
+    borderRadius: 12,
+    marginHorizontal: 20,
+    paddingHorizontal: 17,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FF526B',
+  },
+
+  iconeMontar: {
+    fontSize: 29,
+    marginRight: 13,
+  },
+
+  textosMontar: {
+    flex: 1,
+  },
+
+  textoMontar: {
+    color: CORES.branco,
+    fontWeight: '900',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+
+  subtextoMontar: {
+    color: '#FFE0E4',
+    fontSize: 11,
+    marginTop: 4,
+  },
+
+  setaMontar: {
+    color: CORES.branco,
+    fontSize: 29,
+    marginLeft: 8,
+  },
+
+  tituloCatalogoContainer: {
+    paddingHorizontal: 20,
+    marginTop: 28,
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  tituloCatalogo: {
+    color: CORES.branco,
+    fontSize: 17,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+
+  quantidadeProdutos: {
+    color: CORES.cinza,
+    fontSize: 11,
+  },
+
+  listaProdutos: {
+    paddingHorizontal: 15,
+    paddingBottom: 30,
+  },
+
+  linhaProdutos: {
+    justifyContent: 'space-between',
+  },
+
+  cartaoProduto: {
+    width: '48%',
+    backgroundColor: '#151515',
+    borderWidth: 1,
+    borderColor: CORES.vinho,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 15,
+  },
+
+  imagemProduto: {
+    height: 115,
+    backgroundColor: '#260D13',
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+
+  emojiProduto: {
+    fontSize: 53,
+  },
+
+  nomeProduto: {
+    color: CORES.branco,
+    fontWeight: '900',
+    fontSize: 14,
+    marginBottom: 5,
+  },
+
+  personagemProduto: {
+    color: CORES.vermelho,
+    fontSize: 11,
+    marginBottom: 7,
+  },
+
+  saborProduto: {
+    color: CORES.cinza,
+    fontSize: 11,
+    minHeight: 30,
+  },
+
+  precoProduto: {
+    color: CORES.branco,
+    fontWeight: '900',
+    fontSize: 15,
+    marginTop: 10,
+  },
+
+  verDetalhes: {
+    color: CORES.vermelho,
+    fontSize: 10,
+    fontWeight: '900',
+    marginTop: 10,
+  },
+
+  indisponivel: {
+    color: '#FF7272',
+    fontSize: 10,
+    fontWeight: '900',
+    marginTop: 10,
+  },
+
+  semResultados: {
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    paddingVertical: 35,
+  },
+
+  emojiVazio: {
+    fontSize: 48,
+    marginBottom: 15,
+  },
+
+  textoSemResultados: {
+    color: CORES.branco,
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+
+  descricaoSemResultados: {
+    color: CORES.cinza,
+    textAlign: 'center',
+    fontSize: 12,
+    marginTop: 8,
+    lineHeight: 20,
+  },
+
+  // MONTAGEM DO SORVETE
+
+  tituloOpcao: {
+    color: CORES.vermelho,
+    fontWeight: '900',
+    fontSize: 16,
+    marginTop: 22,
+    marginBottom: 12,
+  },
+
+  opcaoMontagem: {
+    backgroundColor: CORES.campo,
+    borderWidth: 1,
+    borderColor: '#393939',
+    borderRadius: 9,
+    padding: 15,
+    marginBottom: 9,
+  },
+
+  opcaoSelecionada: {
+    borderColor: CORES.vermelho,
+    backgroundColor: '#300D15',
+  },
+
+  textoOpcao: {
+    color: CORES.branco,
+    fontSize: 14,
+  },
+
+  textoOpcaoSelecionada: {
+    color: CORES.vermelho,
+    fontWeight: '900',
+  },
+});
